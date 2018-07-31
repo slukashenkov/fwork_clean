@@ -1,0 +1,50 @@
+2018-06-05 09:18:49,929 - __main__ - INFO - : 0006CBB77366EDDCFC7BB80000 <- Current Sonata message: 
+2018-06-05 09:18:49,929 - __main__ - INFO - : 0006CBB77366EDDCFC7BB80000E6 <- Sonata message with checksun added: 
+2018-06-05 09:51:21,237 - __main__ - INFO - : C00ECBB77366EDDCFC7BB20000F <- Current Sonata message: 
+2018-06-05 09:51:21,237 - __main__ - INFO - : C00ECBB77366EDDCFC7BB20000F48 <- Sonata message with checksun added: 
+2018-06-05 10:55:49,389 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : C00ECBB77366EDDCFC7BB20000F <- Current Sonata message: 
+2018-06-05 10:55:49,390 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : C00ECBB77366EDDCFC7BB20000F48 <- Sonata message with checksun added: 
+2018-06-05 17:44:30,819 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : C00ECBB77366EDDCFC7BB20000F <- Current Sonata message: 
+2018-06-05 17:44:30,821 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : $C00ECBB77366EDDCFC7BB20000F48 <- Sonata message with checksun added: 
+2018-06-07 09:53:47,174 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : C00ECBB77366EDDCFC7BB20000F <- Current Sonata message: 
+2018-06-07 09:53:47,175 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : $C00ECBB77366EDDCFC7BB20000F48 <- Sonata message with checksun added: 
+2018-06-07 09:55:11,868 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : C00ECBB77366EDDCFC7BB20000F <- Current Sonata message: 
+2018-06-07 09:55:11,870 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : $C00ECBB77366EDDCFC7BB20000F48 <- Sonata message with checksun added: 
+2018-06-07 09:58:38,968 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : C00ECBB77366EDDCFC7BB20000F <- Current Sonata message: 
+2018-06-07 09:58:38,969 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : $C00ECBB77366EDDCFC7BB20000F48 <- Sonata message with checksun added: 
+2018-06-07 10:01:07,292 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : C00ECBB77366EDDCFC7BB20000F <- Current Sonata message: 
+2018-06-07 10:01:07,293 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : $C00ECBB77366EDDCFC7BB20000F48 <- Sonata message with checksun added: 
+2018-06-07 10:18:51,277 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : C00ECBB77366EDDCFC7BB20000F <- Current handmade Sonata message: 
+2018-06-07 10:18:51,279 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : $C00ECBB77366EDDCFC7BB20000F48 <- handmade Sonata message with checksum added: 
+2018-06-07 10:21:30,534 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : C00ECBB77366EDDCFC7BB20000F <- Current handmade Sonata message: 
+2018-06-07 10:21:30,535 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : $C00ECBB77366EDDCFC7BB20000F48 <- handmade Sonata message with checksum added: 
+2018-06-07 10:23:09,426 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : C00ECBB77366EDDCFC7BB20000F <- Current handmade Sonata message: 
+2018-06-07 10:23:09,427 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : $C00ECBB77366EDDCFC7BB20000F48 <- handmade Sonata message with checksum added: 
+2018-06-07 10:24:02,912 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : C00ECBB77366EDDCFC7BB20000F <- Current handmade Sonata message: 
+2018-06-07 10:24:02,913 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : $C00ECBB77366EDDCFC7BB20000F48 <- handmade Sonata message with checksum added: 
+2018-06-07 10:25:13,962 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : C00ECBB77366EDDCFC7BB20000F <- Current handmade Sonata message: 
+2018-06-07 10:25:13,963 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : $C00ECBB77366EDDCFC7BB20000F48 <- handmade Sonata message with checksum added: 
+2018-06-07 10:52:46,252 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : C00ECBB77366EDDCFC7BB20000F <- Current handmade Sonata message: 
+2018-06-07 10:52:46,252 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : $C00ECBB77366EDDCFC7BB20000F48 <- handmade Sonata message with checksum added: 
+2018-06-07 11:46:12,157 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : C00ECBB77366EDDCFC7BB20000F <- Current handmade Sonata message: 
+2018-06-07 11:46:12,158 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : $C00ECBB77366EDDCFC7BB20000F48 <- handmade Sonata message with checksum added: 
+2018-06-07 11:48:05,753 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : C00ECBB77366EDDCFC7BB20000F <- Current handmade Sonata message: 
+2018-06-07 11:48:05,754 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : $C00ECBB77366EDDCFC7BB20000F48 <- handmade Sonata message with checksum added: 
+2018-06-07 11:48:44,686 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : C00ECBB77366EDDCFC7BB20000F <- Current handmade Sonata message: 
+2018-06-07 11:48:44,687 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : $C00ECBB77366EDDCFC7BB20000F48 <- handmade Sonata message with checksum added: 
+2018-06-07 11:50:00,657 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : C00ECBB77366EDDCFC7BB20000F <- Current handmade Sonata message: 
+2018-06-07 11:50:00,657 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : $C00ECBB77366EDDCFC7BB20000F48 <- handmade Sonata message with checksum added: 
+2018-06-07 11:51:55,369 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : C00ECBB77366EDDCFC7BB20000F <- Current handmade Sonata message: 
+2018-06-07 11:51:55,370 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : $C00ECBB77366EDDCFC7BB20000F48 <- handmade Sonata message with checksum added: 
+2018-06-07 11:52:41,963 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : C00ECBB77366EDDCFC7BB20000F <- Current handmade Sonata message: 
+2018-06-07 11:52:41,963 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : $C00ECBB77366EDDCFC7BB20000F48 <- handmade Sonata message with checksum added: 
+2018-06-07 11:54:35,691 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : C00ECBB77366EDDCFC7BB20000F <- Current handmade Sonata message: 
+2018-06-07 11:54:35,692 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : $C00ECBB77366EDDCFC7BB20000F48 <- handmade Sonata message with checksum added: 
+2018-06-07 11:55:00,256 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : C00ECBB77366EDDCFC7BB20000F <- Current handmade Sonata message: 
+2018-06-07 11:55:00,257 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : $C00ECBB77366EDDCFC7BB20000F48 <- handmade Sonata message with checksum added: 
+2018-06-07 11:56:35,048 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : C00ECBB77366EDDCFC7BB20000F <- Current handmade Sonata message: 
+2018-06-07 11:56:35,049 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : $C00ECBB77366EDDCFC7BB20000F48 <- handmade Sonata message with checksum added: 
+2018-06-07 11:57:36,564 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : C00ECBB77366EDDCFC7BB20000F <- Current handmade Sonata message: 
+2018-06-07 11:57:36,564 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : $C00ECBB77366EDDCFC7BB20000F48 <- handmade Sonata message with checksum added: 
+2018-06-07 11:58:20,764 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - DEBUG - : C00ECBB77366EDDCFC7BB20000F <- Sonata message composed from stored values: 
+2018-06-07 11:58:22,764 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - DEBUG - : $C00ECBB77366EDDCFC7BB20000F48 <- Sonata message composed from stored values: 

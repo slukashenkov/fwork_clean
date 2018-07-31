@@ -1,0 +1,27 @@
+2018-06-06 13:07:37,077 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : C00ECBB77366EDDCFC7BB20000F <- Current Sonata message: 
+2018-06-06 13:07:37,078 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : $C00ECBB77366EDDCFC7BB20000F48 <- Sonata message with checksun added: 
+2018-06-06 15:48:08,014 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : C00ECBB77366EDDCFC7BB20000F <- Current Sonata message: 
+2018-06-06 15:48:08,015 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : $C00ECBB77366EDDCFC7BB20000F48 <- Sonata message with checksun added: 
+2018-06-06 15:48:08,019 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : C00ECBB77366EDDCFC7BB20000F <- Current Sonata message: 
+2018-06-06 15:48:08,019 - test_bl.test_sonata_plugin.structs_sonata.sonata_msg - INFO - : $C00ECBB77366EDDCFC7BB20000F48 <- Sonata message with checksun added: 
+2018-06-25 09:23:22,682 - test_bl.test_bl_tools.udp_server - INFO - =====================================================================================|
+2018-06-25 09:23:22,698 - test_bl.test_bl_tools.udp_server - INFO - SERVER UDP SERVER on 10.11.10.12:55556--->starts
+2018-06-25 09:23:22,699 - test_bl.test_bl_tools.udp_server - INFO - =====================================================================================|
+2018-06-25 10:38:38,491 - test_bl.test_bl_tools.udp_server - INFO - =====================================================================================|
+2018-06-25 10:38:38,492 - test_bl.test_bl_tools.udp_server - INFO - SERVER UDP SERVER on 10.11.10.12:55556--->starts
+2018-06-25 10:38:38,492 - test_bl.test_bl_tools.udp_server - INFO - =====================================================================================|
+2018-06-25 11:02:57,276 - test_bl.test_bl_tools.udp_server - INFO - =====================================================================================|
+2018-06-25 11:02:57,277 - test_bl.test_bl_tools.udp_server - INFO - SERVER UDP SERVER on 10.11.10.12:55556--->starts
+2018-06-25 11:02:57,277 - test_bl.test_bl_tools.udp_server - INFO - =====================================================================================|
+2018-06-27 12:23:40,226 - test_bl.test_bl_tools.udp_server - INFO - =====================================================================================|
+2018-06-27 12:23:40,226 - test_bl.test_bl_tools.udp_server - INFO - SERVER python_UDP_SERVER on 10.11.10.12:55556---> starts
+2018-06-27 12:23:40,227 - test_bl.test_bl_tools.udp_server - INFO - =====================================================================================|
+2018-06-27 12:24:17,249 - test_bl.test_bl_tools.udp_server - INFO - =====================================================================================|
+2018-06-27 12:24:17,249 - test_bl.test_bl_tools.udp_server - INFO - SERVER python_UDP_SERVER on 10.11.10.12:55556---> starts
+2018-06-27 12:24:17,250 - test_bl.test_bl_tools.udp_server - INFO - =====================================================================================|
+2018-06-27 12:50:30,397 - test_bl.test_bl_tools.udp_server - INFO - =====================================================================================|
+2018-06-27 12:50:30,399 - test_bl.test_bl_tools.udp_server - INFO - SERVER python_UDP_SERVER on 10.11.10.12:55556---> starts
+2018-06-27 12:50:30,401 - test_bl.test_bl_tools.udp_server - INFO - =====================================================================================|
+2018-06-27 13:08:55,994 - test_bl.test_bl_tools.udp_server - INFO - =====================================================================================|
+2018-06-27 13:08:55,994 - test_bl.test_bl_tools.udp_server - INFO - SERVER python_UDP_SERVER on 10.11.10.12:55556---> starts
+2018-06-27 13:08:55,995 - test_bl.test_bl_tools.udp_server - INFO - =====================================================================================|
