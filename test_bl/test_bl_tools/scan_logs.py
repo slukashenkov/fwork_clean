@@ -9,9 +9,9 @@ class ScanLogs():
         self.conf = conf_in
 
         if conf_in != None:
-            self.logs_location = conf_in.logs.location
+            self.logs_location = self.conf.bl_log_dir
         if logs_location!=None:
-            self.logs_location = self.conf.logs_location
+            self.logs_location = logs_location
         return
 
     def scan_logs(self,
@@ -39,12 +39,13 @@ class ScanLogs():
     def parse_line(self,
                    line_in = None,
                    pattern_in = None):
+
         srch = re.compile(pattern_in)
         res=srch.search(line_in)
         return res
 
     def log_reader(self,
-                    logfile = None
+                   logfile = None
                    ):
         if logfile == None:
             raise Exception("NO PATH to the File To parse")
@@ -57,8 +58,11 @@ class ScanLogs():
         return log
 
 def test_this():
-    sl=ScanLogs(logs_location="C:\\data\\kronshtadt\\QA\\BL\\AutomationFrameworkDesign\\ext_tools\\apache-chainsaw-2.0.0-standalone\\apache-chainsaw-2.0.0\\bin\kd_LogFile.log")
-    sl.scan_logs(pattern=".*WatchDogServer.*")
+    sl=ScanLogs(logs_location="C:\\data\\kronshtadt\\QA\\BL\\AutomationFrameworkDesign\\ext_tools\\KD_LOGS\\kd_LogFile.log")
+
+    matches = sl.scan_logs(pattern_in="Message too short")
+    #matches = sl.scan_logs(pattern_in="Message does not start")
+    #matches = sl.scan_logs(pattern_in="Wrong message CRC")
     return
 
 if __name__=="__main__":

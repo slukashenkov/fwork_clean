@@ -1,9 +1,13 @@
+import logging, copy
+from test_bl.test_sonata_plugin.configs_sonata import sonata_send_recieve_properties, sonata_suite_config
 from test_bl.test_sonata_plugin.test_tools_sonata import sonata_test_parser
 
 class SonataNmeaMsgsContentProcessing:
     def __init__(self,
+                 conf=None,
                  data_from=None,
-                 data_to=None
+                 data_to=None,
+                 data_to_list=None
                  ):
 
         """
@@ -11,10 +15,24 @@ class SonataNmeaMsgsContentProcessing:
         :param data_to:
         """
         '''
+        LETS NOT DO ANYTHING WITHOUT PROPER LOGGER
+        '''
+        if conf == None:
+            raise Exception("Test suite config is not provived. \n CAN NOT LOG ANYTHING HERE!")
+
+        else:
+            '''
+            SetUp logger
+            '''
+            self.conf = conf
+            self.logger = self.conf.logging_tools.get_logger(__name__)
+
+        '''
         SETUP DATA to work on
         '''
-        self.data_from=data_from
-        self.data_to=data_to
+        self.data_from = data_from
+        self.data_to = data_to
+        self.data_to_list = data_to_list
 
         '''
         SETUP PROCESSED DATA 
@@ -48,9 +66,13 @@ class SonataNmeaMsgsContentProcessing:
         Initialize parser with data
         to parse
         '''
-        self.nmea_parser=sonata_test_parser.SonataTestParser(self.data_from,
+        self.nmea_parser=sonata_test_parser.SonataTestParser(self.conf,
+                                                             self.data_from,
                                                              self.data_to
                                                             )
+
+        '''List of parsed maps for bulk parsing'''
+        self.nmea_parsed_list = []
         return
 
 
@@ -61,15 +83,69 @@ class SonataNmeaMsgsContentProcessing:
         self.data_parsed = self.nmea_parser.parse_from()
         return
 
+    def parse_nmea_auto(self):
+        i=0
+        while i < self.conf.data_sent_list.__len__():
+            self.packet_indx = i
+            i = i + 1
+            self.parse_nmea()
+            self.nmea_parsed_list.append(copy.deepcopy(self.nmea_parser.sonata_nmea_parsed_map))
+        return
+
     def parse_sonata(self):
         self.nmea_parser.parse_to()
         return
 
-    def compare_fields(self):
-        self.nmea_parser.key_sent = self.key_sent
-        self.nmea_parser.key_received = self.key_received
-        self.nmea_parser.compare_fields()
-        return
+
+
+    def compare_fields_auto(self):
+        pass_keys = []
+        indx=0
+        result = {}
+        results_list = []
+
+        while indx < self.conf.data_sent_list.__len__():
+
+            msg=self.conf.data_sent_list[indx]
+            if msg["pass"] != "":
+
+                pass_keys = msg["pass"]
+                self.nmea_parser.data_to = self.conf.data_sent_list[indx]
+                self.nmea_parser.sonata_nmea_from_parsed = self.nmea_parsed_list[indx]
+                indx = indx + 1
+
+                for key in pass_keys:
+
+                    self.key_sent = key
+                    self.key_received = key
+
+                    if key == "sonata_id":
+                        res_sonata_id = self.nmea_parser.compare_fields(sonata_id=key)
+                        result[key]=res_sonata_id
+
+                    elif  key == "lat":
+                        res_lat = self.nmea_parser.compare_fields(lat=key)
+                        result[key] = res_lat
+
+                    elif key == "lon":
+                        res_lon = self.nmea_parser.compare_fields(lon=key)
+                        result[key] = res_lon
+
+                    elif key == "vel":
+                        res_vel = self.nmea_parser.compare_fields(vel=key)
+                        result[key] = res_vel
+
+                    elif key == "course":
+                        res_course = self.nmea_parser.compare_fields(course=key)
+                        result[key] = res_course
+
+                    elif key == "vel_knots":
+                        res_vel_knots = self.nmea_parser.compare_fields(vel_knots=key)
+                        result[key] = res_vel_knots
+
+                results_list.append(copy.deepcopy(result))
+
+        return results_list
 
     def get_field_in(self):
         return self.data_parsed[self.key_received]

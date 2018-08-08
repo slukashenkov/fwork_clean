@@ -1,6 +1,7 @@
 from binascii import a2b_qp
 from bitstring import BitArray
 #from binascii import a2b_qp
+import copy
 
 from test_bl.test_sonata_plugin.configs_sonata import sonata_send_recieve_properties
 from test_bl.test_bl_tools import read_test_data
@@ -61,9 +62,6 @@ class SonataMsg:
         '''
         self.sonata_msg = None
         self.sonata_data_chsumed = None
-
-
-
 
     def set_sonata_values_map(self):
         '''
@@ -559,27 +557,105 @@ class SonataMsg:
         #self.logger.debug(": " + self.sonata_msg + " <- Sonata message composed from stored values: ")
         #self.logger.debug(": " + self.sonata_data_chsumed + " <- Sonata message composed from stored values: ")
 
-
-        '''
-        METHOD WITH STRINGS
-        '''
         '''
         Individual fields combined into a whole SONATA message
         First: converted into HEX
         Second: checksummed and prepended with $ 
         '''
 
-        self.logger.debug("============================================================================================")
+        '''
+        However there are exceptions
+        designed for negative testing 
+        '''
+        if "fail" in self.sr.sonata_msg and (self.sr.sonata_msg['fail'] == 'bad_chsum'):
 
-        self.sonata_data = self.mtype + self.sonata_id + self.lat + self.lon + self.vel + self.course + self.state + self.tail + self.signal_lvl
-        self.sonata_msg = self.sonata_data.hex.upper()
-        self.logger.debug(": " + self.sonata_msg + " <- Sonata message composed from stored values: ")
-        self.sonata_data_chsumed = '$' + self.add_checksum(self.sonata_msg)
-        self.logger.debug(": " + self.sonata_data_chsumed + " <- Sonata message checksumed: ")
-        self.sonata_data_chsumed = ''.join([self.sonata_data_chsumed, '\n\n'])
+            '''Store search pattern and test message type (positive/negative)'''
+            self.conf.data_sent['fail'] = self.sr.sonata_msg.pop('fail')
+            self.conf.data_sent['log_pttrn'] = self.sr.sonata_msg.pop('log_pttrn')
+            self.conf.data_sent_list.append(copy.deepcopy(self.conf.data_sent))
 
-        self.logger.debug("============================================================================================")
-        return
+            self.logger.debug(
+                "============================================================================================")
+
+            self.sonata_data = self.mtype + self.sonata_id + self.lat + self.lon + self.vel + self.course + self.state + self.tail + self.signal_lvl
+            self.sonata_msg = self.sonata_data.hex.upper()
+
+            self.logger.debug("============================================================================================")
+            self.logger.debug(": " + self.sonata_msg + " <- Sonata message composed from stored values: ")
+
+            self.sonata_data_chsumed = '$' + self.add_checksum_wrong(self.sonata_msg)
+            self.logger.debug(": " + self.sonata_data_chsumed + " <- Sonata message WAS checksumed INCORRECTLY: ")
+            self.sonata_data_chsumed = ''.join([self.sonata_data_chsumed, '\n\n'])
+            self.logger.debug(": " + self.sonata_data_chsumed + " <- Sonata message WAS NOT WAS checksumed INCORRECTLY but TAILED ")
+            self.logger.debug("============================================================================================")
+
+
+
+            return
+
+        if "fail" in self.sr.sonata_msg and (self.sr.sonata_msg['fail'] == 'no_$'):
+
+            '''Store search pattern right away'''
+            self.conf.data_sent['fail'] = self.sr.sonata_msg.pop('fail')
+            self.conf.data_sent['log_pttrn'] = self.sr.sonata_msg.pop('log_pttrn')
+            self.conf.data_sent_list.append(copy.deepcopy(self.conf.data_sent))
+
+            self.logger.debug(
+                "============================================================================================")
+
+            self.sonata_data = self.mtype + self.sonata_id + self.lat + self.lon + self.vel + self.course + self.state + self.tail + self.signal_lvl
+            self.sonata_msg = self.sonata_data.hex.upper()
+            self.logger.debug(": " + self.sonata_msg + " <- Sonata message composed from stored values: ")
+            self.sonata_data_chsumed = '#' + self.add_checksum(self.sonata_msg)
+            self.logger.debug(": " + self.sonata_data_chsumed + " <- Sonata message checksumed but no $: ")
+            self.sonata_data_chsumed = ''.join([self.sonata_data_chsumed, '\n\n'])
+
+            self.logger.debug(
+                "============================================================================================")
+
+            copy.deepcopy(self.conf.data_sent)
+            self.conf.data_sent_list.append(copy.deepcopy(self.conf.data_sent))
+            return
+
+        if "fail" in self.sr.sonata_msg and (self.sr.sonata_msg['fail'] == 'no_tail'):
+
+            '''Store search pattern right away'''
+            self.conf.data_sent['fail'] = self.sr.sonata_msg.pop('fail')
+            self.conf.data_sent['log_pttrn'] = self.sr.sonata_msg.pop('log_pttrn')
+            self.conf.data_sent_list.append(copy.deepcopy(self.conf.data_sent))
+
+            self.logger.debug("============================================================================================")
+
+            self.sonata_data = self.mtype + self.sonata_id + self.lat + self.lon + self.vel + self.course + self.state + self.tail + self.signal_lvl
+            self.sonata_msg = self.sonata_data.hex.upper()
+            self.logger.debug(": " + self.sonata_msg + " <- Sonata message composed from stored values: ")
+            self.sonata_data_chsumed = '$' + self.add_checksum(self.sonata_msg)
+            self.logger.debug(": " + self.sonata_data_chsumed + " <- Sonata message checksumed: but no TAIL ")
+
+            self.logger.debug("============================================================================================")
+
+            copy.deepcopy(self.conf.data_sent)
+            self.conf.data_sent_list.append(copy.deepcopy(self.conf.data_sent))
+            return
+
+        else:
+            '''Store search keys for values that ought to match'''
+            self.conf.data_sent['pass'] = self.sr.sonata_msg.pop('pass')
+            copy.deepcopy(self.conf.data_sent)
+            self.conf.data_sent_list.append(copy.deepcopy(self.conf.data_sent))
+
+            self.logger.debug("============================================================================================")
+
+            self.sonata_data = self.mtype + self.sonata_id + self.lat + self.lon + self.vel + self.course + self.state + self.tail + self.signal_lvl
+            self.sonata_msg = self.sonata_data.hex.upper()
+            self.logger.debug(": " + self.sonata_msg + " <- Sonata message composed from stored values: ")
+            self.sonata_data_chsumed = '$' + self.add_checksum(self.sonata_msg)
+            self.logger.debug(": " + self.sonata_data_chsumed + " <- Sonata message checksumed: ")
+            self.sonata_data_chsumed = ''.join([self.sonata_data_chsumed, '\n\n'])
+            self.logger.debug(": " + self.sonata_data_chsumed + " <- Sonata message checksumed and TAILED")
+
+            self.logger.debug("============================================================================================")
+            return
 
     '''
     |------------------------------------------------------------------------------------------------------------------|
@@ -588,7 +664,6 @@ class SonataMsg:
     # checksum calculation
     # execute on
     # bs_data
-    # """
 
     def add_checksum(self,
                     sonata_msg_in):
@@ -597,13 +672,33 @@ class SonataMsg:
         """
         return sonata_msg_in + self.checksum(BitArray(a2b_qp(sonata_msg_in)))
 
+
+    def add_checksum_wrong(self,
+                           sonata_msg_in):
+        message = BitArray(a2b_qp(sonata_msg_in)).reverse()
+        """
+        Calculate and append checksum to formed message
+        """
+        return sonata_msg_in + self.checksum_wrong(BitArray(a2b_qp(sonata_msg_in)))
+        #return sonata_msg_in + self.checksum(message)
+
     def checksum(self,
                  bitarray):
         """
         Calculate sonata checksum
         """
-        summa = sum((octet.int for octet in bitarray.cut(8)))
-        return BitArray(hex(summa))[-8:].hex.upper()
+
+        total = sum((octet.int for octet in bitarray.cut(8)))
+        return BitArray(hex(total))[-8:].hex.upper()
+
+    def checksum_wrong(self,
+                 bitarray):
+        """
+        Calculate sonata checksum
+        """
+        bitarray.reverse()
+        total = sum((octet.int for octet in bitarray.cut(8)))
+        return BitArray(hex(total))[-8:].hex.upper()
 
     def reset_fields(self):
         '''

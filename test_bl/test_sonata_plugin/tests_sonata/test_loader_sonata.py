@@ -10,7 +10,8 @@ if __name__ == '__main__':
         loader = unittest.TestLoader()
         start_dir = 'C:\\data\\kronshtadt\\QA\\BL\\AutomationFrameworkDesign\\bl_frame_work\\test_bl'
         suite = loader.discover(start_dir)
-        runner = xmlrunner.XMLTestRunner(output='./sonata-xml-test-reports-'+str(counter)+' '+date_now_str)
+        #runner = xmlrunner.XMLTestRunner(output='./sonata-xml-test-reports-'+str(counter)+' '+date_now_str)
+        runner = xmlrunner.XMLTestRunner(output='C:/data/kronshtadt/QA/BL/Test_Logs/sonata-xml-test-reports-' + str(counter) + ' ' + date_now_str)
 
         '''
         while counter != 5:

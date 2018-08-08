@@ -39,6 +39,13 @@ class ReadData:
     def read_json_to_list(self):
         return
 
+    def get_test_names(self):
+        self.read_json_to_map()
+        test_names = []
+        for key, value in self.final_map.items():
+            test_names.append(key)
+
+        return test_names
 
 if __name__ == '__main__':
     """

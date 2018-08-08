@@ -3,12 +3,15 @@ import threading, multiprocessing
 from time import sleep
 from copy import deepcopy
 import logging
+from mimesis.schema import Field, Schema
 
 from test_bl.test_bl_tools.udp_server import UdpServer, UdpPayloadHandler
 from test_bl.test_bl_tools.udp_sender import UdpSender
 from test_bl.test_sonata_plugin.configs_sonata import sonata_send_recieve_properties, sonata_suite_config
 from test_bl.test_bl_tools import received_data, read_test_data, var_utils
 from test_bl.test_sonata_plugin.structs_sonata import sonata_msg
+from test_bl.test_sonata_plugin.test_tools_sonata import sonata_json_gen
+
 
 class SendReceiveSonata():
 
@@ -22,7 +25,7 @@ class SendReceiveSonata():
     on initialisation
     """
     def __init__(self,
-                 conf_in=None):
+                 conf=None):
         """
         Connection establishment and in/out data_from fields setup.
         Configuration`s details should come from some source
@@ -34,15 +37,22 @@ class SendReceiveSonata():
         There must be a Choice between conf class using 
         ENV VARS 
         and Json Cong files
+        
         '''
-        self.conf=conf_in
-        '''|--------------------------------------------------------------------------------------------------------|'''
         '''
-        SetUp logger
+        LETS NOT DO ANYTHING WITHOUT PROPER LOGGER
         '''
-        self.curr_logger=self.conf.logging_tools.get_logger(__name__)
+        if conf == None:
+            raise Exception("Test suite config is not provived. \n CAN NOT LOG ANYTHING HERE!")
+        else:
+            '''
+            SetUp logger and config file
+            '''
+            self.conf = conf
+            self.logger = self.conf.logging_tools.get_logger(__name__)
 
         '''|--------------------------------------------------------------------------------------------------------|'''
+
         '''
         Configuration for test messages MNGMNT
         '''
@@ -100,7 +110,7 @@ class SendReceiveSonata():
         '''|--------------------------------------------------------------------------------------------------------|'''
         ''' CONFIG HOW to send and receive TEST Messages '''
         '''|--------------------------------------------------------------------------------------------------------|'''
-        self.curr_logger.debug("Setting up UDP sender")
+        self.logger.debug("Setting up UDP sender")
         '''
         TODO: setup SOCKET here and not inside sender???
         '''
@@ -123,12 +133,12 @@ class SendReceiveSonata():
         ''' CONFIG UDP messages SENDER '''
         self.udp_sender = None
         self.set_udp_sender()
-        self.curr_logger.debug("UDP sender is set up")
+        self.logger.debug("UDP sender is set up")
 
         '''|--------------------------------------------------------------------------------------------------------|'''
         ''' CONFIG UDP SERVER '''
         '''|--------------------------------------------------------------------------------------------------------|'''
-        self.curr_logger.debug("Setting up UDP server for incoming message from  BL")
+        self.logger.debug("Setting up UDP server for incoming message from  BL")
         #self.traffic_handler = UdpPayloadHandler()
         '''
         self.udp_server = UdpServer(self.conf.listen_on,
@@ -140,11 +150,11 @@ class SendReceiveSonata():
         self.set_udp_server()
         '''|--------------------------------------------------------------------------------------------------------|'''
 
-        self.curr_logger.debug("UDP Server is set up")
+        self.logger.debug("UDP Server is set up")
         '''|--------------------------------------------------------------------------------------------------------|'''
 
     def set_udp_server(self):
-        self.curr_logger.debug("Setting up UDP server for incoming message from  BL")
+        self.logger.debug("Setting up UDP server for incoming message from  BL")
         # self.traffic_handler = UdpPayloadHandler()
         self.udp_server = UdpServer(server_address  = self.conf.listen_on,
                                     handler_class   =   UdpPayloadHandler,
@@ -163,7 +173,7 @@ class SendReceiveSonata():
             self.msgs_to_send = self.conf.msgs_to_send
             self.msg_iterator = iter(self.conf.msgs_to_send)
         else:
-            self.curr_logger.debug("No test messages to iterate over")
+            self.logger.debug("No test messages to iterate over")
 
 
         if self.udp_sender != None:
@@ -204,11 +214,11 @@ class SendReceiveSonata():
         Get current test messages to iterate over         
         '''
         #iterator = iter(self.conf.msgs_to_send)
-        self.curr_logger.info('=======================================================================================')
-        self.curr_logger.info('Start sending messages to KD')
+        self.logger.info('=======================================================================================')
+        self.logger.info('Start sending messages to KD')
         self.udp_sender.send_udp()
-        self.curr_logger.info('Stop sending messages to KD')
-        self.curr_logger.info('=======================================================================================')
+        self.logger.info('Stop sending messages to KD')
+        self.logger.info('=======================================================================================')
 
 
     #def udp_send_to_threaded(self):
@@ -233,29 +243,29 @@ class SendReceiveSonata():
         Get current test messages to iterate over         
         '''
         #iterator = iter(self.conf.msgs_to_send)
-        self.curr_logger.info('=======================================================================================')
-        self.curr_logger.info('Start sending messages to KD')
+        self.logger.info('=======================================================================================')
+        self.logger.info('Start sending messages to KD')
         self.udp_sender.send_udp()
-        self.curr_logger.info('Stop sending messages to KD')
-        self.curr_logger.info('=======================================================================================')
+        self.logger.info('Stop sending messages to KD')
+        self.logger.info('=======================================================================================')
         self.test_num_messages()
         sleep(random.randrange(1, 3))
 
 
     def udp_server_listen_on(self):
-        self.curr_logger.info('Starting up UDP Server to listen traffic from KD')
+        self.logger.info('Starting up UDP Server to listen traffic from KD')
         self.t = threading.Thread(target=self.udp_server.serve_forever)
         self.t.setDaemon(True)  # don't hang on exit
         self.t.start()
         return self.udp_server
 
     def udp_server_stop_listen_on(self):
-        self.curr_logger.info('Stop UDP Server to listen traffic from KD')
+        self.logger.info('Stop UDP Server to listen traffic from KD')
         self.udp_server.stop_server()
 
 
     def close_UDP_socket(self):
-        self.curr_logger.info('Close socket on which test data_from is sent to KD')
+        self.logger.info('Close socket on which test data_from is sent to KD')
         self.udp_sender.close_socket()
 
     def load_test_messages(self):
@@ -455,14 +465,14 @@ class SendReceiveSonata():
             #while msgs_sent_counter != received_counter:
             while self.msg_received_evnt.isSet():
                 # Check whether we have received as many packets as sent
-                self.curr_logger.debug(
+                self.logger.debug(
                     '=======================================================================================')
-                self.curr_logger.debug('Waiting for RECIEVED counter to be --> '
+                self.logger.debug('Waiting for RECIEVED counter to be --> '
                                        + str(msgs_sent_counter)
                                        + ' while it is --> '
                                        + str(received_counter)
                                        )
-                self.curr_logger.debug(
+                self.logger.debug(
                     '=======================================================================================')
                 #self.conf.data_received_lock.acquire()
                 #received_counter = len(msgs_received_data)
@@ -472,19 +482,19 @@ class SendReceiveSonata():
                 num_of_attemps = num_of_attemps - 1
 
                 if num_of_attemps == 0:
-                    self.curr_logger.debug(
+                    self.logger.debug(
                         '=======================================================================================')
-                    self.curr_logger.debug(
+                    self.logger.debug(
                         'UDP SERVER has not RECEIVED ALL THE SENT MESSAGES. ONLY: ' + str(received_counter))
-                    self.curr_logger.debug(
+                    self.logger.debug(
                         '=======================================================================================')
                     break
                 if received_counter == msgs_sent_counter:
-                    self.curr_logger.debug(
+                    self.logger.debug(
                         '=======================================================================================')
-                    self.curr_logger.debug(
-                        'UDP SERVER RECEIVED ALL THE SENT MESSAGES. ONLY: ' + str(received_counter))
-                    self.curr_logger.debug(
+                    self.logger.debug(
+                        'UDP SERVER RECEIVED ALL THE SENT MESSAGES. TOTAL: ' + str(received_counter))
+                    self.logger.debug(
                         '=======================================================================================')
                     break
 
@@ -497,14 +507,14 @@ class SendReceiveSonata():
         else:
             while msgs_sent_counter != received_counter:
                 # Check whether we have received as many packets as sent
-                self.curr_logger.debug(
+                self.logger.debug(
                     '=======================================================================================')
-                self.curr_logger.debug('Waiting for RECIEVED counter to be --> '
+                self.logger.debug('Waiting for RECIEVED counter to be --> '
                                        + str(msgs_sent_counter)
                                        + ' while it is --> '
                                        + str(received_counter)
                                        )
-                self.curr_logger.debug(
+                self.logger.debug(
                     '=======================================================================================')
                 self.conf.data_received_lock.acquire()
                 received_counter = len(msgs_received_data)
@@ -513,31 +523,29 @@ class SendReceiveSonata():
                 num_of_attemps = num_of_attemps - 1
 
                 if num_of_attemps == 0:
-                    self.curr_logger.debug(
+                    self.logger.debug(
                         '=======================================================================================')
-                    self.curr_logger.debug(
+                    self.logger.debug(
                         'UDP SERVER has not RECEIVED ALL THE SENT MESSAGES. ONLY: ' + str(received_counter))
-                    self.curr_logger.debug(
+                    self.logger.debug(
                         '=======================================================================================')
                     break
 
                 if received_counter == msgs_sent_counter:
-                    self.curr_logger.debug(
+                    self.logger.debug(
                         '=======================================================================================')
-                    self.curr_logger.debug(
+                    self.logger.debug(
                         'UDP SERVER RECEIVED ALL THE SENT MESSAGES. ONLY: ' + str(received_counter))
-                    self.curr_logger.debug(
+                    self.logger.debug(
                         '=======================================================================================')
                 break
 
 
 def test_this():
     """
-      send recieve class usage
-      """
-    #for i in range(1,5):
+    send_receive class basic usage
+    """
 
-    # doctest.testmod()
     '''Initial config'''
     # conf = sonata_send_recieve_properties.SonataSendReceiveProperties()
     '''INI based config'''
@@ -548,12 +556,11 @@ def test_this():
     sr = SendReceiveSonata(conf)
     sr = conf.sender_receiver
     # conf.curr_test = "test_sonata_messages01"
-    conf.set_current_test("test_sonata_messages05")
+    conf.set_current_test("test_sonata_messages02")
     sr.load_test_messages()
     sr.set_udp_sender()
     # sr.curr_logger('Debug module send_receive_sonata ')
     curr_udp_srv = sr.udp_server_listen_on()
-
     '''
     Start UDP server listening for messages from KD
     '''
@@ -569,8 +576,190 @@ def test_this():
     #logger.debug('Current status of UDP server is: ' + sr.udp_server.isAlive())
     return
 
+def test_json_generator():
+
+    from mimesis.schema import Field, Schema
+    from test_bl.test_bl_tools.read_test_data import ReadData
+    import time
+    from test_bl.test_sonata_plugin.test_tools_sonata import send_receive_sonata, sonata_nmea_msgs_content_process
+
+    test_case_name = "testSonata"
+    test_case_msg_id = "msgSonata"
+
+    s_json_gen = sonata_json_gen.SonataJsonDataGen(test_case_name=test_case_name,
+                                                   test_case_msg_id=test_case_msg_id,
+                                                   num_of_msgs = 20)
+
+
+    conf = sonata_suite_config.SonataSuiteConfig()
+    conf.curr_test = "testSonata_01"
+    sr = conf.sender_receiver
+
+    # conf.curr_test = "test_sonata_messages01"
+    conf.set_current_test("testSonata_01")
+    sr.messages_dir_json = s_json_gen.gen_file_dir
+    sr.load_test_messages()
+    sr.set_udp_sender()
+    curr_udp_srv = sr.udp_server_listen_on()
+
+    logger = logging.getLogger('client')
+    # logger.info('Server on %s:%s', self.c onf.)
+    sr.udp_send_to()
+    # sr.udp_send_to_threaded()
+
+    '''Lets check what is uP'''
+    time.sleep(random.randrange(3, 15))
+
+    snmea = conf.content_proc
+    total_messages = conf.data_received.__len__()
+
+    indx = 0
+    while indx < total_messages:
+        snmea.packet_indx = indx
+        snmea.parse_nmea()
+        snmea.nmea_parser.data_to = snmea.data_to_list[indx]
+
+        #snmea.key_sent = 'sonata_id=\"sonata_id\"'
+        #snmea.compare_fields()
+
+        res_sonata_id= snmea.nmea_parser.compare_fields(
+            sonata_id="sonata_id"
+        )
+
+        res_lat = snmea.nmea_parser.compare_fields(
+            lat="lat"
+        )
+
+        res_lon = snmea.nmea_parser.compare_fields(
+            lon="lon"
+        )
+
+        res_vel = snmea.nmea_parser.compare_fields(
+            vel="vel"
+        )
+        res_course = snmea.nmea_parser.compare_fields(
+            course = "course"
+        )
+
+        res_vel_knots = snmea.nmea_parser.compare_fields(
+            vel_knots = "vel_knots"
+        )
+        indx = indx + 1
+
+    sr.udp_server_stop_listen_on()
+    sr.close_UDP_socket()
+
+
+    logger = logging.getLogger('client')
+
+def test_content_processing_positive():
+    import time
+    from test_bl.test_sonata_plugin.test_tools_sonata import send_receive_sonata, sonata_nmea_msgs_content_process
+    """
+    send recieve class usage
+    """
+
+    '''Initial config'''
+    # conf = sonata_send_recieve_properties.SonataSendReceiveProperties()
+    '''INI based config'''
+    conf = sonata_suite_config.SonataSuiteConfig()
+    '''this needed to properly initialise sender i this test'''
+    conf.curr_test = "test_sonata_messages01"
+    # conf.set_current_test("test_sonata_messages01")
+    # conf.set_current_test("test_sonata_messages02")
+    sr = SendReceiveSonata(conf)
+    sr = conf.sender_receiver
+    # conf.curr_test = "test_sonata_messages01"
+    # conf.set_current_test("test_sonata_messages05")
+    conf.set_current_test("test_sonata_messages01")
+    sr.load_test_messages()
+    sr.set_udp_sender()
+    # sr.curr_logger('Debug module send_receive_sonata ')
+    curr_udp_srv = sr.udp_server_listen_on()
+
+    '''
+    Start UDP server listening for messages from KD
+    '''
+    logger = logging.getLogger('client')
+    # logger.info('Server on %s:%s', self.c onf.)
+    sr.udp_send_to()
+
+    time. sleep(random.randrange(3, 6))
+
+
+    '''positive case'''
+    #snmea = sonata_nmea_msgs_content_process.SonataNmeaMsgsContentProcessing(conf,conf.data_received,conf.data_sent)
+
+    snmea = conf.content_proc
+
+    snmea.parse_nmea_auto()
+
+    results=snmea.compare_fields_auto()
+
+
+    sr.udp_server_stop_listen_on()
+    sr.close_UDP_socket()
+
+
+    logger = logging.getLogger('client')
+    #logger.debug('Current status of UDP server is: ' + sr.udp_server.isAlive())
+    return
+
+def test_content_processing_negative():
+    import time
+    from test_bl.test_sonata_plugin.test_tools_sonata import send_receive_sonata, sonata_nmea_msgs_content_process
+    """
+    send recieve class usage
+    """
+
+    '''Initial config'''
+    # conf = sonata_send_recieve_properties.SonataSendReceiveProperties()
+    '''INI based config'''
+    conf = sonata_suite_config.SonataSuiteConfig()
+    '''this needed to properly initialise sender i this test'''
+    conf.curr_test = "test_sonata_messages01"
+    # conf.set_current_test("test_sonata_messages01")
+    # conf.set_current_test("test_sonata_messages02")
+    sr = SendReceiveSonata(conf)
+    sr = conf.sender_receiver
+    # conf.curr_test = "test_sonata_messages01"
+    # conf.set_current_test("test_sonata_messages05")
+    conf.set_current_test("test_sonata_messages02")
+    sr.load_test_messages()
+    sr.set_udp_sender()
+    # sr.curr_logger('Debug module send_receive_sonata ')
+    curr_udp_srv = sr.udp_server_listen_on()
+
+    '''
+    Start UDP server listening for messages from KD
+    '''
+    logger = logging.getLogger('client')
+    # logger.info('Server on %s:%s', self.c onf.)
+    sr.udp_send_to()
+
+    time. sleep(random.randrange(3, 6))
+
+
+    '''negative case'''
+
+    snmea = conf.content_proc
+    total_messages = conf.data_received.__len__()
+    res_log_scan = snmea.nmea_parser.parse_log_auto()
+
+    sr.udp_server_stop_listen_on()
+    sr.close_UDP_socket()
+
+
+    logger = logging.getLogger('client')
+    #logger.debug('Current status of UDP server is: ' + sr.udp_server.isAlive())
+    return
+
 
 if __name__ == "__main__":
-    test_this()
+    # test_this()
+    # test_json_generator()
+    test_content_processing_positive()
+    # test_content_processing_negative()
+    # test_wrong_messages()
 
 

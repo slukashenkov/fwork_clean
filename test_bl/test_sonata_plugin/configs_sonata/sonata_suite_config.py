@@ -5,7 +5,7 @@ from subprocess import Popen
 import configparser, platform
 import threading, multiprocessing, queue
 
-from test_bl.test_bl_tools import received_data, logging_tools, external_scripts, var_utils
+from test_bl.test_bl_tools import received_data, logging_tools, external_scripts, var_utils, read_test_data
 from test_bl.test_sonata_plugin.structs_sonata import sonata_msg
 from test_bl.test_sonata_plugin.test_tools_sonata import sonata_nmea_msgs_content_process, send_receive_sonata
 
@@ -142,13 +142,7 @@ class SonataSuiteConfig:
             self.ssh_remote_commands_conf_stop = self.__utils__.zip_to_map(to_zip01=self.ssh_remote_commands_keys,
                                                                             to_zip02=self.ssh_remote_commands_vals)
 
-            '''SET TEST NAMES FOR AUTO LOADING OF TEST DATA FOR SPECIFIC TEST'''
 
-
-            '''Final MAP of commands for execution over SSH on tests start'''
-            self.sonata_tests_names = self.__utils__.conf_key_to_arr(conf_parser=self.sonata_cnf,
-                                                                           section_key='SONATA_TEST_NAMES',
-                                                                           switch='values')
 
             '''
             self.ssh_remote_keys_vals_combined = zip(self.ssh_remote_commands_keys, self.ssh_remote_commands_vals)
@@ -190,7 +184,7 @@ class SonataSuiteConfig:
                                                             )
             '''
             |---------------------------------------------------------------------------------------------------------------        
-            |    SET VARS TO DEFINE for TEST DATA RETRIEVAL       
+            |    SET VARS TO DEFINE for TEST DATA RETRIEVAL and TESTS` NAMES    
             |---------------------------------------------------------------------------------------------------------------
             '''
             '''VARS TO DEFINE MESSAGES USED BY SENDING TOOLS AGAINST MODULES
@@ -205,7 +199,24 @@ class SonataSuiteConfig:
             elif self.syst == 'Linux':
                 self.messages_dir_json = self.sonata_cnf['TEST_DATA']['BL_MESSAGES_PATH_JSON_LINUX']
 
+
+            '''IN CASE TEST MESSAGES WILL BE SET WITHOUT INTERMEDIATE FORMAT'''
             self.messages_dir_txt = self.sonata_cnf['TEST_DATA']['BL_MESSAGES_PATH_TXT']
+
+            '''SET TEST NAMES FOR AUTO LOADING OF TEST DATA FOR SPECIFIC TEST'''
+
+            '''Initially test names were doubled in sonata_conf.ini and test data file sonata_test_data.json.
+               This seemed illogical. To make situation more straightforward now lets get tests` names from one place
+               where they will be searched for anyway at some point in order to form data packets.
+               KEEP conf commented for now.  
+            '''
+            '''
+            self.sonata_tests_names = self.__utils__.conf_key_to_arr(conf_parser=self.sonata_cnf,
+                                                                           section_key='SONATA_TEST_NAMES',
+                                                                           switch='values')
+            '''
+            read_t_data = read_test_data.ReadData(data_location_map = self.messages_dir_json)
+            self.sonata_tests_names = read_t_data.get_test_names()
 
             '''
             Default not used.
@@ -222,6 +233,14 @@ class SonataSuiteConfig:
             self.num_msgs_to_send = int(self.sonata_cnf['TEST_DATA']['NUM_OF_MSGS'])
             self.delay_btwn_msgs = int(self.sonata_cnf['TEST_DATA']['DEL_BTWN_MSGS'])
             '''======================================================================================================'''
+            '''
+            SET LOCATION OF THE LOG FOLE FOR ANALYSYS
+            '''
+            if self.syst == 'Windows':
+                self.bl_log_dir = self.sonata_cnf['BL_LOG_FILE']['BL_LOG_FILE_DIR']
+            elif self.syst == 'Linux':
+                self.bl_log_dir = self.sonata_cnf['BL_LOG_FILE_LINUX']['BL_LOG_FILE_DIR_LINUX']
+
             '''
             VARS TO DEFINE actual SENDING/RECEIVING 
             and 
@@ -243,14 +262,18 @@ class SonataSuiteConfig:
             '''
             self.data_received_lock = threading.RLock()
             self.data_sent = self.rd.get_sent_m_all()
+            self.data_sent_list = self.rd.get_sent_l_all()
             '''
             |---------------------------------------------------------------------------------------------------------------        
             '''
             ''' Set the empty storing 
                 structures in everything
             '''
-            self.content_proc = sonata_nmea_msgs_content_process.SonataNmeaMsgsContentProcessing(self.data_received,
-                                                                                                 self.data_sent)
+            self.content_proc = sonata_nmea_msgs_content_process.SonataNmeaMsgsContentProcessing(conf = self,
+                                                                                                 data_from = self.data_received,
+                                                                                                 data_to = self.data_sent,
+                                                                                                 data_to_list = self.data_sent_list
+                                                                                                 )
             '''
             |---------------------------------------------------------------------------------------------------------------        
             '''
@@ -282,8 +305,6 @@ class SonataSuiteConfig:
                 self.msg_received_evnt = None
                 self.msg_to_send_q = None
                 self.msg_to_receive_q = None
-
-
 
             '''======================================================================================================'''
             '''
@@ -318,9 +339,8 @@ class SonataSuiteConfig:
             |---------------------------------------------------------------------------------------------------------------        
             '''
             '''
-            TODO: reset                   whatever NEEDED to be reset
+            TODO: reset whatever NEEDED to be reset
             '''
-
             '''
             |---------------------------------------------------------------------------------------------------------------        
             '''

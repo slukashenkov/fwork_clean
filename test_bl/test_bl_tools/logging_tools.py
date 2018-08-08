@@ -23,12 +23,12 @@ from subprocess import Popen
 
 class LoggingTools():
     def __init__(self,
-                 default_path,
-                 default_level,
-                 logging_dir,
-                 log_file,
-                 log_file_dir,
-                 log_conf_full
+                 default_path = None,
+                 default_level = None,
+                 logging_dir = None,
+                 log_file = None,
+                 log_file_dir = None,
+                 log_conf_full = None
                  ):
             """
             Logger is not set yet

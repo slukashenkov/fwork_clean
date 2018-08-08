@@ -2,7 +2,7 @@ import socketserver
 import logging
 
 from test_bl.test_bl_tools import logging_tools
-from test_bl.test_sonata_plugin.configs_sonata import sonata_suite_config, sonata_send_recieve_properties
+#from test_bl.test_sonata_plugin.configs_sonata import sonata_suite_config, sonata_send_recieve_properties
 from test_bl.test_bl_tools import var_utils
 
 
@@ -111,7 +111,6 @@ class UdpServer(socketserver.ThreadingUDPServer):
         socketserver.UDPServer.__init__(self,
                                         server_address,
                                         handler_class)
-
         self.data_in=data_in
         self.stop_serve_forever = True
         self.udp_server_banner(server_name='python_UDP_SERVER',
@@ -224,6 +223,7 @@ class UdpServer(socketserver.ThreadingUDPServer):
 def test_this():
     import threading
     from test_bl.test_bl_tools import logging_tools, udp_server, udp_sender
+    from test_bl.test_sonata_plugin.configs_sonata import sonata_suite_config
 
     '''
     TO BECOME properly initialised
@@ -273,6 +273,8 @@ def test_this():
 def test_threaded_srv():
     import threading
     from test_bl.test_bl_tools import logging_tools, udp_server, udp_sender
+    from test_bl.test_bl_tools import logging_tools, udp_server, udp_sender
+    from test_bl.test_sonata_plugin.configs_sonata import sonata_suite_config
 
     '''
     TO BECOME properly initialised
@@ -282,10 +284,7 @@ def test_threaded_srv():
     conf = sonata_suite_config.SonataSuiteConfig()
 
     lt = conf.logging_tools
-    '''
-    Server needs iterable to store data_from in
-    '''
-    data_in = []
+
 
     '''
     Server needs listening prefs
@@ -304,13 +303,31 @@ def test_threaded_srv():
 
     server02.stop_serve_forever = False
 
+    '''
+    Server needs iterable to store data_from in
+    '''
+    data_in = []
+
+    '''Naturally server neeeds an adddress and a port'''
     address = ('10.11.10.12', 55557)
+
     # address = ('localhost', 0)  # let the kernel give us a port
-    server = udp_server.UdpServer(address,
-                                  UdpPayloadHandler,
-                                  data_in,
-                                  lt,
-                                  conf
+
+    '''
+    server_address  = None,
+    handler_class   = None,
+    data_in         = None,
+    curr_log_tools  = None,
+    conf_in         = None,
+    msg_res_event   = None
+    '''
+
+    server = udp_server.UdpServer(server_address    = address,
+                                  handler_class     = UdpPayloadHandler,
+                                  data_in           = data_in,
+                                  curr_log_tools    = lt,
+                                  conf_in           = None,
+                                  msg_res_event     = None
                                   )
 
     t = threading.Thread(target=server.serve_forever)
