@@ -30,8 +30,16 @@ class SonataNmeaMsgsContentProcessing:
         '''
         SETUP DATA to work on
         '''
+        '''
+        These are individual packets for comparison
+        '''
         self.data_from = data_from
         self.data_to = data_to
+
+
+        '''
+        If there are more packets to be sent let them be in a list 
+        '''
         self.data_to_list = data_to_list
 
         '''
@@ -43,6 +51,7 @@ class SonataNmeaMsgsContentProcessing:
         '''
         PACKET PROCESSING INSTRUCTIONS
         only index FOR DEMO
+        TO DO: clean-up 
         '''
         self.packet_indx = None
 
@@ -66,9 +75,9 @@ class SonataNmeaMsgsContentProcessing:
         Initialize parser with data
         to parse
         '''
-        self.nmea_parser=sonata_test_parser.SonataTestParser(self.conf,
-                                                             self.data_from,
-                                                             self.data_to
+        self.nmea_parser=sonata_test_parser.SonataTestParser(conf           = self.conf,
+                                                             data_from      = self.data_from,
+                                                             data_to        = self.data_to
                                                             )
 
         '''List of parsed maps for bulk parsing'''
@@ -92,11 +101,6 @@ class SonataNmeaMsgsContentProcessing:
             self.nmea_parsed_list.append(copy.deepcopy(self.nmea_parser.sonata_nmea_parsed_map))
         return
 
-    def parse_sonata(self):
-        self.nmea_parser.parse_to()
-        return
-
-
 
     def compare_fields_auto(self):
         pass_keys = []
@@ -111,7 +115,7 @@ class SonataNmeaMsgsContentProcessing:
 
                 pass_keys = msg["pass"]
                 self.nmea_parser.data_to = self.conf.data_sent_list[indx]
-                self.nmea_parser.sonata_nmea_from_parsed = self.nmea_parsed_list[indx]
+                self.nmea_parser.sonata_nmea_parsed_map = self.nmea_parsed_list[indx]
                 indx = indx + 1
 
                 for key in pass_keys:

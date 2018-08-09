@@ -363,6 +363,22 @@ class SonataSuiteConfig:
             # self.data_received = self.rd.get_received_l_all()
             return
 
+        def reset_test_messages_sent(self):
+            """
+            TODO:
+            When needed a choice for what type of datasrtorage is
+            to be reset either list or a dictionarys
+            :return:
+            """
+            '''
+            RESET STRUCTURE for MESSAGES TO BE RECEIVED
+            '''
+            self.data_sent_list.clear()
+            # self.rd.reset_received_l()
+            # self.data_received = self.rd.get_received_l_all()
+            return
+
+
         def set_sender_and_messages(self):
             self.sender_receiver.load_test_messages()
             self.sender_receiver.set_udp_sender()

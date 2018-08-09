@@ -8,7 +8,8 @@ if __name__ == '__main__':
         date_now = datetime.datetime.now()
         date_now_str = date_now.strftime("%Y-%m-%d_%H-%M")
         loader = unittest.TestLoader()
-        start_dir = 'C:\\data\\kronshtadt\\QA\\BL\\AutomationFrameworkDesign\\bl_frame_work\\test_bl'
+        #C:\data\kronshtadt\QA\BL\AutomationFrameworkDesign\bl_frame_work\test_bl\test_sonata_plugin\tests_sonata
+        start_dir = 'C:\\data\\kronshtadt\\QA\\BL\\AutomationFrameworkDesign\\bl_frame_work\\test_bl\\test_sonata_plugin\\tests_sonata'
         suite = loader.discover(start_dir)
         #runner = xmlrunner.XMLTestRunner(output='./sonata-xml-test-reports-'+str(counter)+' '+date_now_str)
         runner = xmlrunner.XMLTestRunner(output='C:/data/kronshtadt/QA/BL/Test_Logs/sonata-xml-test-reports-' + str(counter) + ' ' + date_now_str)

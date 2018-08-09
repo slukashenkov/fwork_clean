@@ -596,7 +596,7 @@ def test_json_generator():
     sr = conf.sender_receiver
 
     # conf.curr_test = "test_sonata_messages01"
-    conf.set_current_test("testSonata_01")
+    conf.set_current_test("test_sonata_messages01")
     sr.messages_dir_json = s_json_gen.gen_file_dir
     sr.load_test_messages()
     sr.set_udp_sender()
@@ -671,7 +671,7 @@ def test_content_processing_positive():
     sr = conf.sender_receiver
     # conf.curr_test = "test_sonata_messages01"
     # conf.set_current_test("test_sonata_messages05")
-    conf.set_current_test("test_sonata_messages01")
+    conf.set_current_test("test_sonata_messages05")
     sr.load_test_messages()
     sr.set_udp_sender()
     # sr.curr_logger('Debug module send_receive_sonata ')
@@ -691,7 +691,6 @@ def test_content_processing_positive():
     #snmea = sonata_nmea_msgs_content_process.SonataNmeaMsgsContentProcessing(conf,conf.data_received,conf.data_sent)
 
     snmea = conf.content_proc
-
     snmea.parse_nmea_auto()
 
     results=snmea.compare_fields_auto()
@@ -755,11 +754,76 @@ def test_content_processing_negative():
     return
 
 
+def test_content_processing_ind_values():
+        from mimesis.schema import Field, Schema
+        from test_bl.test_bl_tools.read_test_data import ReadData
+        import time
+        from test_bl.test_sonata_plugin.test_tools_sonata import send_receive_sonata, sonata_nmea_msgs_content_process
+
+        conf = sonata_suite_config.SonataSuiteConfig()
+        conf.curr_test = "test_sonata_messages01"
+        sr = conf.sender_receiver
+        # conf.curr_test = "test_sonata_messages01"
+        conf.set_current_test("test_sonata_messages01")
+
+        sr.load_test_messages()
+        sr.set_udp_sender()
+        curr_udp_srv = sr.udp_server_listen_on()
+
+        logger = logging.getLogger('client')
+        # logger.info('Server on %s:%s', self.c onf.)
+        sr.udp_send_to()
+        # sr.udp_send_to_threaded()
+
+        '''Lets check what is uP'''
+        time.sleep(random.randrange(3, 15))
+
+        snmea = conf.content_proc
+        total_messages = conf.data_received.__len__()
+
+        indx = 0
+
+        snmea.packet_indx = indx
+        snmea.parse_nmea()
+        snmea.nmea_parser.data_to = snmea.data_to_list[indx]
+
+        # snmea.key_sent = 'sonata_id=\"sonata_id\"'
+        # snmea.compare_fields()
+
+        res_sonata_id = snmea.nmea_parser.compare_fields(
+            sonata_id="sonata_id"
+        )
+
+        res_lat = snmea.nmea_parser.compare_fields(
+            lat="lat"
+        )
+
+        res_lon = snmea.nmea_parser.compare_fields(
+            lon="lon"
+        )
+
+        res_vel = snmea.nmea_parser.compare_fields(
+            vel="vel"
+        )
+        res_course = snmea.nmea_parser.compare_fields(
+            course="course"
+        )
+
+        res_vel_knots = snmea.nmea_parser.compare_fields(
+            vel_knots="vel_knots"
+        )
+
+
+        sr.udp_server_stop_listen_on()
+        sr.close_UDP_socket()
+
+
 if __name__ == "__main__":
     # test_this()
     # test_json_generator()
-    test_content_processing_positive()
-    # test_content_processing_negative()
+    # test_content_processing_ind_values()
+    # test_content_processing_positive()
+     test_content_processing_negative()
     # test_wrong_messages()
 
 

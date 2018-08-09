@@ -53,7 +53,12 @@ class SonataToNMEAConversionTests(unittest.TestCase):
             self.ext_scripts = external_scripts.ExtScripts(self.conf)
             '''Log server is started from bootstrap script BUT for for debugging it should be turned on here'''
             self.ext_scripts.start_log_server()
-            #self.ext_scripts.set_test_env()
+            self.ext_scripts.set_test_env()
+
+            self.exclude_tests = ["test_sonata_messages01",
+                                  "test_sonata_messages02",
+                                  "test_sonata_messages03",
+                                  "test_sonata_messages04"]
             return
 
         @classmethod
@@ -80,10 +85,17 @@ class SonataToNMEAConversionTests(unittest.TestCase):
             #self.sr.set_udp_sender()
             # self.ext_scripts.start_log_server()
 
+            currentTest = self.id().split('.')[-1]
+
             '''SETUP TEST DATA, UDP SENDER and SEND MESSAGES'''
-            #self.conf.set_current_test(self.test_case.popleft())
-            self.conf.set_current_test("test_sonata_messages02")
+            self.conf.set_current_test(self.test_case.popleft())
+            curr_test = self.conf.curr_test
+            if curr_test in self.exclude_tests:
+                self.skipTest("ID is in th elist")
+
+            #self.conf.set_current_test("test_sonata_messages02")
             self.conf.reset_test_messages_received()
+            self.conf.reset_test_messages_sent()
 
             self.__tools__.build_test_banner(mod_name='SONATA',
                                              suit_name='SUITE' + __name__,
@@ -102,7 +114,7 @@ class SonataToNMEAConversionTests(unittest.TestCase):
             self.curr_logger.info('Test'+__name__+ 'tearDown routine.')
             return
 
-        @unittest.skip("test_sonata_messages04 is not needed now")
+        #@unittest.skip("test_sonata_messages01 is not needed now")
         def test_sonata_messages01(self):
                 """
                 :return:
@@ -198,7 +210,7 @@ class SonataToNMEAConversionTests(unittest.TestCase):
                 test_res = False
             self.assertTrue(test_res)
 
-        @unittest.skip("test_sonata_messages02 is not needed now")
+       # @unittest.skip("test_sonata_messages02 is not needed now")
         def test_sonata_messages03(self):
                 """
                 :return:
@@ -226,7 +238,7 @@ class SonataToNMEAConversionTests(unittest.TestCase):
 
                 self.assertTrue(test_res)
 
-        @unittest.skip("test_sonata_messages03 is not needed now")
+        #@unittest.skip("test_sonata_messages04 is not needed now")
         def test_sonata_messages04(self):
                 """
                 :return:
@@ -255,8 +267,102 @@ class SonataToNMEAConversionTests(unittest.TestCase):
 
                 self.assertTrue(test_res)
 
+        #@unittest.skip("test_sonata_messages05 is not needed now")
+        def test_sonata_messages05(self):
+                """
+                :return:
+                """
 
+                ''' DO AN ACTION ASSUMED TO BE DONE BY EQUPMENT
+                    MESSAGES HAVE BEING FORMED DURING CONFIGURATION STAGE
+                    LISTENER HAS BEEN SETUP THEN AS WELL
+                '''
 
+                '''
+
+                self.curr_logger.info("===============================================================================|")
+                self.curr_logger.info("02 sonata message send send via udp")
+                self.conf.set_current_test("test_sonata_messages02")
+                # self.conf.load_test_messages()
+                '''
+                '''
+                Setup UDP Server
+                '''
+                '''
+                self.conf.reset_test_messages_received()
+
+                self.sr.load_test_messages()
+                self.sr.set_udp_sender()
+                self.sr.udp_send_to()
+                '''
+                self.__tools__.build_test_banner(mod_name='SONATA',
+                                                 suit_name='SUITE' + __name__,
+                                                 ending='EXECUTES TEST BODY ' + self.conf.curr_test,
+                                                 logging_level='DEBUG',
+                                                 logger=self.curr_logger)
+                snmea = self.conf.content_proc
+                snmea.parse_nmea_auto()
+                res_sonata = snmea.compare_fields_auto()
+
+                for res in res_sonata:
+                    self.assertTrue(res)
+
+        #@unittest.skip("test_sonata_messages06 is not needed now")
+        def test_sonata_messages06(self):
+                """
+                :return:
+                """
+
+                '''
+                DO AN ACTION ASSUMED TO BE DONE BY EQUIPMENT.
+                MESSAGES HAVE BEING FORMED DURING CONFIGURATION STAGE
+                LISTENER HAS BEEN SETUP THEN AS WELL
+                '''
+                self.__tools__.build_test_banner(mod_name='SONATA',
+                                                 suit_name='SUITE' + __name__,
+                                                 ending='EXECUTES TEST BODY ' + self.conf.curr_test,
+                                                 logging_level='DEBUG',
+                                                 logger=self.curr_logger)
+                '''
+                Test for proper error in CASE Sonata message has wrong CRC
+                '''
+                snmea = self.conf.content_proc
+                result_search_strings = snmea.nmea_parser.parse_log_auto()
+
+                if result_search_strings.__len__() > 0:
+                    test_res = True
+                elif result_search_strings.__len__() == 0:
+                    test_res = False
+
+                self.assertTrue(test_res)
+
+        def test_sonata_messages07(self):
+                """
+                :return:
+                """
+
+                '''
+                DO AN ACTION ASSUMED TO BE DONE BY EQUIPMENT.
+                MESSAGES HAVE BEING FORMED DURING CONFIGURATION STAGE
+                LISTENER HAS BEEN SETUP THEN AS WELL
+                '''
+                self.__tools__.build_test_banner(mod_name='SONATA',
+                                                 suit_name='SUITE' + __name__,
+                                                 ending='EXECUTES TEST BODY ' + self.conf.curr_test,
+                                                 logging_level='DEBUG',
+                                                 logger=self.curr_logger)
+                '''
+                Test for proper error in CASE Sonata message has wrong CRC
+                '''
+                snmea = self.conf.content_proc
+                result_search_strings = snmea.nmea_parser.parse_log_auto()
+
+                if result_search_strings.__len__() > 0:
+                    test_res = True
+                elif result_search_strings.__len__() == 0:
+                    test_res = False
+
+                self.assertTrue(test_res)
 
 
 

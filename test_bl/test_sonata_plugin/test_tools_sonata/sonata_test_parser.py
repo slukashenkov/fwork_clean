@@ -1,12 +1,13 @@
 import logging
-from test_bl.test_sonata_plugin.configs_sonata import sonata_send_recieve_properties, sonata_suite_config
+from test_bl.test_bl_tools.logging_tools import LoggingTools
 from test_bl_tools.scan_logs import ScanLogs
 
 class SonataTestParser:
     def __init__(self,
-                 conf = None,
-                 data_from=None,
-                 data_to=None
+                 conf       = None,
+                 data_from  = None,
+                 data_to    = None,
+                 logs_dir    = None
                  ):
         """
 
@@ -18,15 +19,17 @@ class SonataTestParser:
         '''
         LETS NOT DO ANYTHING WITHOUT PROPER LOGGER
         '''
-        if conf == None:
-            raise Exception("Test suite config is not provived. \n CAN NOT LOG ANYTHING HERE!")
-
+        if conf == None and logs_dir != None:
+            self.logs_dir = logs_dir
+            self.lt = LoggingTools()
+            self.logger = self.lt.get_logger(__name__)
         else:
             '''
             SetUp logger
             '''
             self.conf = conf
             self.logger = self.conf.logging_tools.get_logger(__name__)
+
 
         '''
         ALL DATA TO PROCESS
@@ -45,6 +48,7 @@ class SonataTestParser:
         self.sonata_nmea_from = {}
         self.sonata_nmea_parsed_map = {}
         self.sonata_nmea_to = {}
+        self.sonata_nmea_from_parsed = {}
         return
 
         '''
@@ -167,9 +171,9 @@ class SonataTestParser:
 
         result = False
 
-        if sonata_id != None and  ((sonata_id in self.data_to) and (sonata_id in self.sonata_nmea_from_parsed)):
+        if sonata_id != None and  ((sonata_id in self.data_to) and (sonata_id in self.sonata_nmea_parsed_map)):
             field_sent = self.data_to[sonata_id]
-            field_received = int(self.sonata_nmea_from_parsed[sonata_id])
+            field_received = int(self.sonata_nmea_parsed_map[sonata_id])
             try:
                 assert field_sent == field_received, "Fields ARE NOT equal"
                 result = True
@@ -179,10 +183,10 @@ class SonataTestParser:
                 self.logger.info("Comparison of " + str(field_sent) + " and " + str(field_received) + " in field named: " + sonata_id + " FAILED MISERABLY")
                 return result
 
-        if lat != None and  ((lat in self.data_to) and (lat in self.sonata_nmea_from_parsed)):
+        if lat != None and  ((lat in self.data_to) and (lat in self.sonata_nmea_parsed_map)):
             field_sent = self.data_to[lat]
             field_sent_str = str(field_sent["deg"]) + str(field_sent["min"]) + str(field_sent["sec"])+"." + str(field_sent["tens_sec"])
-            field_received=self.sonata_nmea_from_parsed[lat]["deg"]
+            field_received=self.sonata_nmea_parsed_map[lat]["deg"]
             try:
                 assert field_sent_str==field_received, "Fields ARE NOT equal"
                 result = True
@@ -192,12 +196,12 @@ class SonataTestParser:
                 self.logger.info("Comparison of " + field_sent_str + " and " + field_received + " in field named: " + lat + " FAILED MISERABLY")
                 return result
 
-        if lon != None and  ((lon in self.data_to) and (lon in self.sonata_nmea_from_parsed)):
+        if lon != None and  ((lon in self.data_to) and (lon in self.sonata_nmea_parsed_map)):
             field_sent = self.data_to[lon]
             field_sent_str = str(field_sent["deg"])+str(field_sent["min"])+str(field_sent["sec"])+"."+str(field_sent["tens_sec"])
-            field_received=self.sonata_nmea_from_parsed[lon]
+            field_received=self.sonata_nmea_parsed_map[lon]
 
-            field_received = self.sonata_nmea_from_parsed[lon]["deg"]
+            field_received = self.sonata_nmea_parsed_map[lon]["deg"]
             try:
                 assert field_sent_str == field_received, "Fields ARE NOT equal"
                 result = True
@@ -207,7 +211,7 @@ class SonataTestParser:
                 self.logger.info("Comparison of " + field_sent_str + " and " + field_received + " in field named: " + lon + " FAILED MISERABLY")
                 return result
 
-        if vel != None and  ((vel in self.data_to) and (vel in self.sonata_nmea_from_parsed)):
+        if vel != None and  ((vel in self.data_to) and (vel in self.sonata_nmea_parsed_map)):
             field_sent = self.data_to[vel]
             '''
             if (field_sent["hkm_h"] or field_sent["km_h"]) in self.range:
@@ -218,7 +222,7 @@ class SonataTestParser:
                 field_sent_str = str(field_sent["hkm_h"]) + str(field_sent["km_h"])
             '''
             field_sent_str = str(field_sent["hkm_h"]) + str(field_sent["km_h"])
-            field_received=self.sonata_nmea_from_parsed[vel]["hkm_h"]
+            field_received=self.sonata_nmea_parsed_map[vel]["hkm_h"]
             try:
                 assert field_sent_str == field_received, "Fields ARE NOT equal"
                 result = True
@@ -229,11 +233,11 @@ class SonataTestParser:
                 return result
 
 
-        if course != None and  ((course in self.data_to) and (course in self.sonata_nmea_from_parsed)):
+        if course != None and  ((course in self.data_to) and (course in self.sonata_nmea_parsed_map)):
             field_sent = self.data_to[course]
             field_sent_str = str(field_sent["deg"]) + str(field_sent["tens_deg"])
 
-            field_received=self.sonata_nmea_from_parsed[course]["deg"]
+            field_received=self.sonata_nmea_parsed_map[course]["deg"]
             try:
                 assert field_sent_str == field_received, "Fields ARE NOT equal"
                 result = True
@@ -245,7 +249,7 @@ class SonataTestParser:
 
 
 
-        if vel_knots != None and vel_knots in self.sonata_nmea_from_parsed:
+        if vel_knots != None and vel_knots in self.sonata_nmea_parsed_map:
             field_sent = self.data_to["vel"]
             field_sent_str_hkm_h = str(field_sent["hkm_h"])
             field_sent_str_hkm_h = float(field_sent_str_hkm_h)*100
@@ -257,7 +261,7 @@ class SonataTestParser:
             field_sent_calc = round(field_sent_calc)
             field_sent_str = str(field_sent_calc)
 
-            field_received = self.sonata_nmea_from_parsed[vel_knots]
+            field_received = self.sonata_nmea_parsed_map[vel_knots]
             field_received = float(field_received)
             field_received = round(field_received)
 
@@ -278,7 +282,7 @@ class SonataTestParser:
 
     def parse_log(self,
                   pattern_in = None):
-        search_substr = ScanLogs(conf_in = self.conf)
+        search_substr = ScanLogs(logs_location = self.conf)
         log_location = self.conf.bl_log_dir
 
         if pattern_in != None:
