@@ -1,1 +1,0 @@
-__all__ = ["test_sonata_functions", "test_loader_sonata"]
