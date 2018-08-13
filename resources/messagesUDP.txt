@@ -1,3 +1,0 @@
-$some string01
-$some string02
-$some string04
