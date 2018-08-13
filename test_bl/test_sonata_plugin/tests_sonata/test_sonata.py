@@ -52,13 +52,16 @@ class SonataToNMEAConversionTests(unittest.TestCase):
 
             self.ext_scripts = external_scripts.ExtScripts(self.conf)
             '''Log server is started from bootstrap script BUT for for debugging it should be turned on here'''
-            self.ext_scripts.start_log_server()
+            #self.ext_scripts.start_log_server()
             self.ext_scripts.set_test_env()
+
+            #self.exclude_tests = []
 
             self.exclude_tests = ["test_sonata_messages01",
                                   "test_sonata_messages02",
                                   "test_sonata_messages03",
                                   "test_sonata_messages04"]
+
             return
 
         @classmethod
