@@ -1,5 +1,5 @@
-/project/
-/resources/
+/project
+/resources
 /.idea/
 **/__pycache__
 **/.log
