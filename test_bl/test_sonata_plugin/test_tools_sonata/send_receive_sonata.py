@@ -822,8 +822,8 @@ if __name__ == "__main__":
     # test_this()
     # test_json_generator()
     # test_content_processing_ind_values()
-    # test_content_processing_positive()
-     test_content_processing_negative()
+     test_content_processing_positive()
+    # test_content_processing_negative()
     # test_wrong_messages()
 
 

@@ -1,6 +1,6 @@
 import logging
 from test_bl.test_bl_tools.logging_tools import LoggingTools
-from test_bl_tools.scan_logs import ScanLogs
+from test_bl.test_bl_tools.scan_logs import ScanLogs
 
 class SonataTestParser:
     def __init__(self,

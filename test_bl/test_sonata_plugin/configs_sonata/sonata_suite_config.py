@@ -17,6 +17,8 @@ class SonataSuiteConfig:
             """
             '''Lets find ot the system we run on'''
             self.syst = platform.system()
+            '''And where we are'''
+            self.proj_abs_path = os.path.abspath(os.path.dirname(__file__))
 
             '''
             Set all configs params to be used in ALL TESTS of THIS SUITE dealing with SONATA messages.
@@ -37,28 +39,43 @@ class SonataSuiteConfig:
             '''SET PARAMS for LOCAL VM MANAGEMENT and start of LOG SERVER serving BL remotely'''
             self.vm_logsrv_cnf = configparser.ConfigParser()
             if self.syst == 'Windows':
-                self.vm_logsrv_cnf_location = 'C:\\data\\kronshtadt\\QA\\BL\\AutomationFrameworkDesign\\bl_frame_work\\test_bl\\test_bl_configs\\LocalVM_RemBL_LogSRVconf.ini'
+
+                self.vm_logsrv_cnf_location = os.path.join(self.proj_abs_path,
+                                                           "..\\..\\test_bl_configs\\LocalVM_RemBL_LogSRVconf.ini")
+
+                #self.vm_logsrv_cnf_location = 'C:\\data\\kronshtadt\\QA\\BL\\AutomationFrameworkDesign\\bl_frame_work\\test_bl\\test_bl_configs\\LocalVM_RemBL_LogSRVconf.ini'
+                'C:\\data\\kronshtadt\\QA\\BL\\AutomationFrameworkDesign\\bl_git_branching\\test_bl\\test_sonata_plugin\\configs_sonata\\..\\..\\test_bl_configs\\LocalVM_RemBL_LogSRVconf.ini'
                 self.vm_logsrv_cnf.read(self.vm_logsrv_cnf_location)
             elif self.syst == 'Linux':
-                self.vm_logsrv_cnf_location = '/home/slon/BL_tests_project/bl_frame_work/test_bl/test_bl_configs/LocalVM_RemBL_LogSRVconf.ini'
+                self.vm_logsrv_cnf_location = os.path.join(self.proj_abs_path,
+                                                           "../../test_bl_configs/LocalVM_RemBL_LogSRVconf.ini")
+
+                #self.vm_logsrv_cnf_location = '/home/slon/BL_tests_project/bl_frame_work/test_bl/test_bl_configs/LocalVM_RemBL_LogSRVconf.ini'
                 self.vm_logsrv_cnf.read(self.vm_logsrv_cnf_location)
 
             '''SET SONATA`S GENERAL CONFIG'''
             self.sonata_cnf = configparser.ConfigParser()
             if self.syst == 'Windows':
-                self.sonata_cnf_location = 'C:\\data\\kronshtadt\\QA\\BL\\AutomationFrameworkDesign\\bl_frame_work\\test_bl\\test_sonata_plugin\\configs_sonata\\sonata_conf.ini'
+                self.sonata_cnf_location = os.path.join(self.proj_abs_path,"sonata_conf.ini")
+
+                #self.sonata_cnf_location = 'C:\\data\\kronshtadt\\QA\\BL\\AutomationFrameworkDesign\\bl_frame_work\\test_bl\\test_sonata_plugin\\configs_sonata\\sonata_conf.ini'
                 self.sonata_cnf.read(self.sonata_cnf_location)
             elif self.syst == 'Linux':
-                self.sonata_cnf_location = '/home/slon/BL_tests_project/bl_frame_work/test_bl/test_sonata_plugin/configs_sonata/sonata_conf.ini'
+                self.sonata_cnf_location = os.path.join(self.proj_abs_path, "sonata_conf.ini")
+                #self.sonata_cnf_location = '/home/slon/BL_tests_project/bl_frame_work/test_bl/test_sonata_plugin/configs_sonata/sonata_conf.ini'
                 self.sonata_cnf.read(self.sonata_cnf_location)
 
             '''SET SSH PREFS FOR BL CONFIG AND RESTART HANDLING'''
             self.bl_ssh_cnf = configparser.ConfigParser()
             if self.syst == 'Windows':
-                self.bl_ssh_cnf_location = 'C:\\data\\kronshtadt\\QA\\BL\\AutomationFrameworkDesign\\bl_frame_work\\test_bl\\test_bl_configs\\ssh_bl_conf_files.ini'
+                self.bl_ssh_cnf_location = os.path.join(self.proj_abs_path,
+                                                           "..\\..\\test_bl_configs\\ssh_bl_conf_files.ini")
+                #self.bl_ssh_cnf_location = 'C:\\data\\kronshtadt\\QA\\BL\\AutomationFrameworkDesign\\bl_frame_work\\test_bl\\test_bl_configs\\ssh_bl_conf_files.ini'
                 self.bl_ssh_cnf.read(self.bl_ssh_cnf_location)
             elif self.syst == 'Linux':
-                self.bl_ssh_cnf_location = '/home/slon/BL_tests_project/bl_frame_work/test_bl/test_bl_configs/ssh_bl_conf_files.ini'
+                self.bl_ssh_cnf_location = os.path.join(self.proj_abs_path,
+                                                        "../../test_bl_configs/ssh_bl_conf_files.ini")
+                #self.bl_ssh_cnf_location = '/home/slon/BL_tests_project/bl_frame_work/test_bl/test_bl_configs/ssh_bl_conf_files.ini'
                 self.bl_ssh_cnf.read(self.bl_ssh_cnf_location)
 
             '''
